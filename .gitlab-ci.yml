@@ -1,16 +1,18 @@
 stages:
-  - backup_execution
+  - backup
 
-redundant_proof_run:
-  stage: backup_execution
+# Schedule: Every 6 hours (0 0,6,12,18 * * *)
+backup_logic_cycle:
+  stage: backup
   image: python:3.12
   script:
     - pip install requests
     - python run_proof_engine.py
-    - git config --global user.name 'Governor-Bot-GitLab'
+    - git config --global user.name 'Governor-Backup-Bot'
     - git config --global user.email 'governor@synaptic.ai'
     - git add continuity_ledger.json
-    - git diff --staged --quiet || (git commit -m "AUTOSYNC: GitLab Redundancy Proof Sealed" && git push)
+    # Selective push: Only if a unique proof was generated and not already present
+    - git diff --staged --quiet || (git commit -m "BACKUP: Redundant Proof Fragment Captured" && git push)
   only:
     - schedules
     - main
