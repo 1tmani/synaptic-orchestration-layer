@@ -27,5 +27,5 @@ jobs:
           git config --global user.name 'Governor-Bot'
           git config --global user.email 'governor@synaptic.ai'
           git add continuity_ledger.json
-          # Check for changes to avoid empty commit failure
+          # FIX: Skip commit and exit successfully if no changes were detected
           git diff --staged --quiet || (git commit -m "AUTOSYNC: Deterministic Proof Sealed" && git push)
