@@ -1,0 +1,28 @@
+name: Neural Proof Automation
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  execute-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Run Proof Engine
+        run: python run_proof_engine.py
+
+      - name: Commit Proof Artifacts
+        run: |
+          git config --global user.name 'Governor-Bot'
+          git config --global user.email 'governor@synaptic.ai'
+          git add continuity_ledger.json
+          git diff --quiet && git diff --staged --quiet || git commit -m "AUTOSYNC: Deterministic Proof Sealed"
+          git push
