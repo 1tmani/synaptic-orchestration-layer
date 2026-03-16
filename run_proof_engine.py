@@ -13,7 +13,6 @@ def execute_merkle_logic():
     else:
         ledger = {'history': []}
 
-    # Preserve exact logic from notebook
     tasks = [f'task_{i}' for i in range(1000)]
     leaves = [hashlib.sha256(str(t).encode()).hexdigest() for t in tasks]
 
@@ -27,18 +26,17 @@ def execute_merkle_logic():
         'root': current_root,
         'timestamp': datetime.now().isoformat(),
         'task_count': 1000,
-        'status': 'RENDER_CLOUD_SYNCED'
+        'status': 'STABLE_BASELINE_ANCHORED'
     }
     ledger['history'].append(entry)
     with open(ledger_path, 'w') as f: json.dump(ledger, f, indent=4)
     return current_root
 
 @app.route('/')
-def status_ping():
+def health_check():
     root = execute_merkle_logic()
-    return f"✅ DISPATCHER_ACTIVE | LATEST_ROOT: {root[:16]}..."
+    return f"✅ BASELINE_SYNC_ACTIVE | ROOT: {root[:16]}..."
 
 if __name__ == '__main__':
-    # Render binds to port 10000 by default for web services
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
