@@ -10,9 +10,9 @@ backup_logic_cycle:
     - python run_proof_engine.py
     - git config --global user.name 'Governor-Backup-Bot'
     - git config --global user.email 'governor@synaptic.ai'
-    - git add continuity_ledger.json
-    # Selective push: Only if a unique proof was generated and not already present
-    - git diff --staged --quiet || (git commit -m "BACKUP: Redundant Proof Fragment Captured" && git push)
+    - git add continuity_ledger.json run_proof_engine.py .github/workflows/proof-run.yml
+    # Selective push: Only if unique changes exist to avoid collisions
+    - git diff --staged --quiet || (git commit -m "BACKUP: Redundant 6-Hour Proof Fragment Captured" && git push)
   only:
     - schedules
     - main
