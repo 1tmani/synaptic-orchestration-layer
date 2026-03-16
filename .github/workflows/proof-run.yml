@@ -27,5 +27,5 @@ jobs:
           git config --global user.name 'Governor-Bot'
           git config --global user.email 'governor@synaptic.ai'
           git add continuity_ledger.json
-          git diff --quiet && git diff --staged --quiet || git commit -m "AUTOSYNC: Deterministic Proof Sealed"
-          git push
+          # Check if there are staged changes; if not, skip commit and push
+          git diff --staged --quiet || (git commit -m "AUTOSYNC: Deterministic Proof Sealed" && git push)
