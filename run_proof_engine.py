@@ -2,6 +2,9 @@ import hashlib
 import json
 import os
 from datetime import datetime
+from flask import Flask
+
+app = Flask(__name__)
 
 def run_engine():
     ledger_path = 'continuity_ledger.json'
@@ -23,11 +26,16 @@ def run_engine():
         'root': current_root,
         'timestamp': datetime.now().isoformat(),
         'task_count': 1000,
-        'prev_root': ledger['history'][-1]['root'] if ledger['history'] else '0xORIGIN',
-        'status': 'COMMITTED_TO_REPO'
+        'status': 'RENDER_NODE_SYNCED'
     }
     ledger['history'].append(entry)
     with open(ledger_path, 'w') as f: json.dump(ledger, f, indent=4)
-    print(f'✅ PERSISTENCE LOCKED: Root {current_root[:16]} stored.')
+    return current_root
 
-if __name__ == '__main__': run_engine()
+@app.route('/')
+def health_check():
+    root = run_engine()
+    return f"✅ PROOF_ENGINE_ACTIVE | ROOT: {root[:16]}..."
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=10000)
