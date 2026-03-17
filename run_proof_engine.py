@@ -9,7 +9,7 @@ app = Flask(__name__)
 def execute_merkle_logic():
     tasks = [f'task_{i}' for i in range(1000)]
     leaves = [hashlib.sha256(str(t).encode()).hexdigest() for t in tasks]
-    
+
     def build_tree(nodes):
         if len(nodes) == 1: return nodes[0]
         if len(nodes) % 2 != 0: nodes.append(nodes[-1])
